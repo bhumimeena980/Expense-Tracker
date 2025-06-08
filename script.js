@@ -2,12 +2,13 @@ const transactions = [];
 const form = document.getElementById('transaction-form');
 const list = document.getElementById('transaction-list');
 const ctx = document.getElementById('expenseChart').getContext('2d');
+const balanceEl = document.getElementById('balance');
 
 let chart;
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  const description = document.getElementById('description').value;
+  const description = document.getElementById('description').value.trim();
   const amount = parseFloat(document.getElementById('amount').value);
   const type = document.getElementById('type').value;
 
@@ -21,6 +22,7 @@ form.addEventListener('submit', (e) => {
 
   updateList();
   updateChart();
+  updateBalance();
   form.reset();
 });
 
@@ -48,19 +50,57 @@ function updateChart() {
 
   if (chart) chart.destroy();
 
+  if (income === 0 && expense === 0) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    return;
+  }
+
+  let labels = [];
+  let data = [];
+  let backgroundColor = [];
+
+  if (income > 0) {
+    labels.push('Income');
+    data.push(income);
+    backgroundColor.push('#4CAF50');
+  }
+
+  if (expense > 0) {
+    labels.push('Expense');
+    data.push(expense);
+    backgroundColor.push('#F44336');
+  }
+
   chart = new Chart(ctx, {
     type: 'pie',
     data: {
-      labels: ['Income', 'Expense'],
+      labels: labels,
       datasets: [{
-        data: [income, expense],
-        backgroundColor: ['#4CAF50', '#F44336']
+        data: data,
+        backgroundColor: backgroundColor
       }]
     },
     options: {
-      responsive: true
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+        }
+      }
     }
   });
+}
+
+function updateBalance() {
+  const income = transactions
+    .filter(t => t.type === 'income')
+    .reduce((sum, t) => sum + t.amount, 0);
+  const expense = transactions
+    .filter(t => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0);
+  const balance = income - expense;
+
+  balanceEl.textContent = balance.toFixed(2);
 }
 
 function deleteTransaction(index) {
@@ -68,6 +108,7 @@ function deleteTransaction(index) {
     transactions.splice(index, 1);
     updateList();
     updateChart();
+    updateBalance();
   }
 }
 
@@ -77,14 +118,19 @@ function editTransaction(index) {
   const newAmount = prompt("Edit amount:", transaction.amount);
   const newType = prompt("Edit type (income/expense):", transaction.type);
 
-  if (newDesc && !isNaN(parseFloat(newAmount)) && (newType === "income" || newType === "expense")) {
+  if (
+    newDesc &&
+    !isNaN(parseFloat(newAmount)) &&
+    (newType === "income" || newType === "expense")
+  ) {
     transactions[index] = {
-      description: newDesc,
+      description: newDesc.trim(),
       amount: parseFloat(newAmount),
       type: newType
     };
     updateList();
     updateChart();
+    updateBalance();
   } else {
     alert("Invalid input. Edit canceled.");
   }
