@@ -61,8 +61,20 @@ li button {
   border-radius: 4px;
   padding: 4px 8px;
   background-color: #ddd;
+  transition: background-color 0.3s ease;
 }
 
 li button:hover {
   background-color: #ccc;
+}
+
+h2 {
+  margin-top: 20px;
+}
+
+#balance {
+  color: #333;
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-bottom: 20px;
 }
