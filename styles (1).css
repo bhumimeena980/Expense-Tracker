@@ -1,0 +1,68 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5;
+  padding: 20px;
+}
+
+.container {
+  max-width: 600px;
+  background: white;
+  padding: 20px;
+  margin: auto;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+input, select, button {
+  padding: 10px;
+  font-size: 16px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  padding: 10px;
+  margin: 5px 0;
+  border-left: 5px solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.income {
+  border-color: green;
+  background-color: #e8f5e9;
+}
+
+.expense {
+  border-color: red;
+  background-color: #ffebee;
+}
+
+li span {
+  flex-grow: 1;
+}
+
+li button {
+  margin-left: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  background-color: #ddd;
+}
+
+li button:hover {
+  background-color: #ccc;
+}
